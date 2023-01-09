@@ -1,0 +1,66 @@
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <style>
+        .card {
+            margin: 0 auto;
+            max-width: 512px;
+        }
+        img {
+            margin: 1rem;
+            max-width: 320px;
+        }
+        p {
+            margin: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container text-center">
+        <h1>Server-Sent Events</h1>
+        <button class="btn btn-primary" data-type="start-btn">Start</button>
+        <button class="btn btn-danger" data-type="stop-btn">Stop</button>
+        <p data-type="event-log"></p>
+    </main>
+
+    <script type="text/javascript">
+    class App {
+        constructor(selector) {
+            this.$ = document.querySelector(selector)
+            this.#init()
+        }
+
+        #init() {
+            this.startBtn = this.$.querySelector('[data-type="start-btn"]')
+            this.stopBtn = this.$.querySelector('[data-type="stop-btn"]')
+            this.eventLog = this.$.querySelector('[data-type="event-log"]')
+            this.startBtn.addEventListener('click', this.startEvents.bind(this))
+            this.stopBtn.addEventListener('click', this.stopEvents.bind(this))
+            this.eventLog.textContent = 'start....'
+        }
+
+        startEvents() {
+            const _this  =this;
+            this.evtSource = new EventSource("http://127.0.0.1:2929/sse");
+            this.evtSource.addEventListener("message", function(event) {
+                // Logic to handle status updates
+                _this.eventLog.textContent = 'message ' + event.data;
+            });
+            this.evtSource.addEventListener("end", function(event) {
+                _this.eventLog.textContent = 'Handling end....'
+                _this.evtSource.close();
+            });
+        }
+
+        stopEvents() {
+            this.eventLog.textContent = 'Force end....'
+            this.evtSource.close();
+        }
+
+    }
+
+
+    const app = new App('main')
+    </script>
+</body>
