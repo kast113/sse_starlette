@@ -16,6 +16,7 @@ async def numbers(minimum, maximum):
             await asyncio.sleep(0.9)
             yield dict(data=i)
     except asyncio.CancelledError as e:
+        print('client close request')
         print(e)
         raise e
 
@@ -24,7 +25,7 @@ async def numbers(minimum, maximum):
 async def route(
         request: Request
 ):
-    event_generator = numbers(10, 16)
+    event_generator = numbers(10, 20)
     return EventSourceResponse(event_generator)
 
 

@@ -47,8 +47,10 @@
                 // Logic to handle status updates
                 _this.eventLog.textContent = 'message ' + event.data;
             });
-            this.evtSource.addEventListener("end", function(event) {
-                _this.eventLog.textContent = 'Handling end....'
+            this.evtSource.addEventListener("error", function(event) {
+                // server stop send data
+                console.log('ERROR')
+                _this.eventLog.textContent = 'ERR....'
                 _this.evtSource.close();
             });
         }
